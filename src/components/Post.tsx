@@ -1,8 +1,9 @@
 import React from 'react'
 import Image from './Image'
-import PostAction from './PostAction'
 import PostInteraction from './PostInteraction'
 import Link from 'next/link';
+import { imagekit } from '../../utils';
+import Video from './Video';
 
 interface FileDetailsResponse {
     width: number;
@@ -13,22 +14,22 @@ interface FileDetailsResponse {
     customMetadata?: { sensitive: boolean };
   }
 
-const Post = ({ type }: { type?: "status" | "comment" }) => {
+const Post = async ({ type }: { type?: "status" | "comment" }) => {
 
-  // const getFileDetails = async (
-  //   fileId: string
-  // ): Promise<FileDetailsResponse> => {
-  //   return new Promise((resolve, reject) => {
-  //     imagekit.getFileDetails(fileId, function (error, result) {
-  //       if (error) reject(error);
-  //       else resolve(result as FileDetailsResponse);
-  //     });
-  //   });
-  // };
+  const getFileDetails = async (
+    fileId: string
+  ): Promise<FileDetailsResponse> => {
+    return new Promise((resolve, reject) => {
+      imagekit.getFileDetails(fileId, function (error, result) {
+        if (error) reject(error);
+        else resolve(result as FileDetailsResponse);
+      });
+    });
+  };
 
-  // const fileDetails = await getFileDetails("pass file id here");
+   const fileDetails = await getFileDetails("pass file id here");
 
-  // console.log(fileDetails);
+   console.log(fileDetails);
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       <div className="flex items-center gap-2 text-sm text-textGray mb-2 from-bold">
@@ -95,7 +96,7 @@ const Post = ({ type }: { type?: "status" | "comment" }) => {
             </p>
           </Link>
           <Image path="general/post.jpeg" alt="" w={600} h={600} />
-          {/* {fileDetails && fileDetails.fileType === "image" ? (
+          {fileDetails && fileDetails.fileType === "image" ? (
             <Image
               path={fileDetails.filePath}
               alt=""
@@ -108,7 +109,7 @@ const Post = ({ type }: { type?: "status" | "comment" }) => {
               path={fileDetails.filePath}
               className={fileDetails.customMetadata?.sensitive ? "blur-lg" : ""}
             />
-          )} */}
+          )}
           {type === "status" && (
             <span className="text-textGray">8:41 PM · Dec 5, 2024</span>
           )}
